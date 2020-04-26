@@ -4,28 +4,27 @@
       <div class="row card-body">
         <div class="col-6 justify-content-center align-self-center">
           <img
-            class="card-img-top"
-            src="../assets/logo.png"
-            alt="Card image cap"
-            style="width: 100px;"
+            class="img-fluid"
+            v-bind:src="`http://localhost:5000/image/${this.pr.img}`"
+            alt="Product"
           />
         </div>
         <div class="col-6">
           <div class="card-body font-weight-bold" style="color: #41B883;">
-            <h3>{{this.$route.params.product.product}}</h3>
+            <h3>{{this.pr.product}}</h3>
           </div>
           <div class="card-body font-weight-bold" style="color: #41B883;">
-            <h3>{{this.$route.params.product.price}} €</h3>
+            <h3>{{this.pr.price}} €</h3>
           </div>
           <div class="card-body font-weight-bold" style="color: #41B883;">
-            <h6>In Stock :</h6>
+            <h6>In Stock :{{this.pr.stock}}</h6>
           </div>
           <div class="card-body font-weight-bold" style="color: #41B883;">
-            <h6>Available Sizes :</h6>
+            <h6>Available Sizes : {{this.pr.sizes}}</h6>
           </div>
           <div class="card-body">
             <button
-              @click="addToCart(this.$route.params.product)"
+              @click="addToCart(pr)"
               type="button"
               class="shadow p-3 mb-5 rounded btn btn-info"
             >
@@ -43,9 +42,18 @@
 import State from "../manageCart";
 export default {
   name: "Home",
+  created() {
+    this.pr = this.$route.params.product;
+  },
+  mounted() {
+    this.payload = JSON.parse(localStorage.getItem("apiData"));
+    this.result = this.payload.find(product => product._id == this.$route.params.product._id);
+  },
   methods: {
     addToCart(load) {
       State.add(load);
+      console.log(this.result);
+      this.$swal("Your Product Is Added To Your Cart");
     }
   }
 };

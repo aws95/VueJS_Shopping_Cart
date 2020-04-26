@@ -7,7 +7,7 @@
           <div class="card shadow-sm p-3 mb-5 bg-white rounded">
             <img
               class="card-img-top"
-              src="../assets/logo.png"
+              v-bind:src="`http://localhost:5000/image/${product.img}`"
               alt="Card image cap"
               style="width: 100px;"
             />
@@ -36,37 +36,39 @@
 <script>
 import _ from "lodash";
 import State from "../manageCart";
+import axios from "axios";
 
 export default {
   name: "ProductList",
   data: () => {
     return {
-      list: [
-        {
-          id: 1,
-          product: "NEW BALANCE TEMPO  ANTHRACITE",
-          price: 130.0,
-          qty: 1
-        },
-        { id: 2, product: "MIZUNO DUEL SONIC  ROUGE", price: 115.0, qty: 1 },
-        { id: 3, product: "ASICS GE NIMBUS 22  CORAIL", price: 180.0, qty: 1 },
-        { id: 4, product: "ASICS GE CUMULUS 21  CORAIL", price: 140.0, qty: 1 },
-        {
-          id: 5,
-          product: "INOV 8 TERRAULTRA G 260  VERT",
-          price: 165.0,
-          qty: 1
-        },
-        { id: 6, product: "INOV 8 ROCLITE G 275  ROUGE", price: 155.0, qty: 1 },
-        { id: 7, product: "BROOKS GHOST 12  NOIR", price: 140.0, qty: 1 },
-        { id: 8, product: "BROOKS CALDERA 4  GRIS", price: 140.0, qty: 1 },
-        { id: 9, product: "BROOKS TRANSCEND 7  BLEU", price: 170.0, qty: 1 }
-      ]
+      list: JSON.parse(localStorage.getItem("apiData"))
     };
+  },
+  created() {
+    axios
+      .get("http://localhost:5000/products")
+      .then(res => localStorage.setItem("apiData", JSON.stringify(res.data)))
+      .catch(err => console.log(err));
+  },
+  mounted() {
+    this.checkStorage(this.list);
   },
   methods: {
     addToCart(load) {
       State.add(load);
+    },
+    checkStorage(key) {
+      if (localStorage.getItem(key)) {
+        try {
+          this[key] = JSON.parse(localStorage.getItem(key));
+        } catch (e) {
+          localStorage.removeItem(key);
+        }
+      }
+    },
+    saveStorage() {
+      localStorage.setItem(JSON.stringify(this.list));
     }
   },
   computed: {

@@ -6,12 +6,15 @@ export default {
     }
     ,
     add(product) {
-        this.data.cart.push({
-            id: product.id,
-            product: product.product,
-            price: product.price,
-            qty: product.qty
-        })
+        var found = _.find(this.data.cart, ['id', product.id])
+        if (typeof found != 'object') {
+            this.data.cart.push({
+                id: product._id,
+                product: product.product,
+                price: product.price,
+                qty: product.qty
+            })
+        }
     },
     remove(product) {
         var found = _.find(this.data.cart, ['id', product.id])
