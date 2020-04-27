@@ -16,7 +16,7 @@
               <p class="card-text">{{product.price}}</p>
               <router-link :to="{ name: 'ProductDescription', params: { product: product} }">
                 <button
-                  @click="$emit('prod-desc',product.id)"
+                  @click="prodDecription(product)"
                   class="btn btn-outline-info"
                 >Product Description</button>
               </router-link>
@@ -35,41 +35,30 @@
 
 <script>
 import _ from "lodash";
-import State from "../manageCart";
 import axios from "axios";
 
 export default {
   name: "ProductList",
   data: () => {
     return {
-      list: JSON.parse(localStorage.getItem("apiData"))
+      list: []
     };
+  },
+  methods: {
+    addToCart(load) {
+      this.dp = JSON.parse(localStorage.getItem("cartData"))
+      this.dp.push(load);
+     return  localStorage.setItem("cartData", JSON.stringify( this.dp));
+    },
+    prodDecription(load) {
+     localStorage.setItem("productDesc", JSON.stringify(load));
+    }
   },
   created() {
     axios
       .get("http://localhost:5000/products")
-      .then(res => localStorage.setItem("apiData", JSON.stringify(res.data)))
+      .then(res => (this.list = res.data))
       .catch(err => console.log(err));
-  },
-  mounted() {
-    this.checkStorage(this.list);
-  },
-  methods: {
-    addToCart(load) {
-      State.add(load);
-    },
-    checkStorage(key) {
-      if (localStorage.getItem(key)) {
-        try {
-          this[key] = JSON.parse(localStorage.getItem(key));
-        } catch (e) {
-          localStorage.removeItem(key);
-        }
-      }
-    },
-    saveStorage() {
-      localStorage.setItem(JSON.stringify(this.list));
-    }
   },
   computed: {
     groupedProducts() {

@@ -5,22 +5,22 @@
         <div class="col-6 justify-content-center align-self-center">
           <img
             class="img-fluid"
-            v-bind:src="`http://localhost:5000/image/${this.pr.img}`"
+            v-bind:src="`http://localhost:5000/image/${this.payload.img}`"
             alt="Product"
           />
         </div>
         <div class="col-6">
           <div class="card-body font-weight-bold" style="color: #41B883;">
-            <h3>{{this.pr.product}}</h3>
+            <h3>{{this.payload.product}}</h3>
           </div>
           <div class="card-body font-weight-bold" style="color: #41B883;">
-            <h3>{{this.pr.price}} €</h3>
+            <h3>{{this.payload.price}} €</h3>
           </div>
           <div class="card-body font-weight-bold" style="color: #41B883;">
-            <h6>In Stock :{{this.pr.stock}}</h6>
+            <h6>In Stock :{{this.payload.stock}}</h6>
           </div>
           <div class="card-body font-weight-bold" style="color: #41B883;">
-            <h6>Available Sizes : {{this.pr.sizes}}</h6>
+            <h6>Available Sizes : {{this.payload.sizes}}</h6>
           </div>
           <div class="card-body">
             <button
@@ -39,21 +39,32 @@
 </template>
 
 <script>
-import State from "../manageCart";
+import axios from "axios";
 export default {
   name: "Home",
+  data: () => {
+    return {
+      payload: []
+    };
+  },
   created() {
+    this.prodD = JSON.parse(localStorage.getItem("productDesc"));
     this.pr = this.$route.params.product;
+    this.prodD = JSON.parse(localStorage.getItem("productDesc"));
+    axios
+      .get(`http://localhost:5000/products/${this.prodD._id}`)
+      .then(res => (this.payload = res.data))
+      .catch(err => console.log(err));
   },
   mounted() {
-    this.payload = JSON.parse(localStorage.getItem("apiData"));
-    this.result = this.payload.find(product => product._id == this.$route.params.product._id);
+   this.prodD = JSON.parse(localStorage.getItem("productDesc"));
   },
   methods: {
     addToCart(load) {
-      State.add(load);
-      console.log(this.result);
+      this.dp = JSON.parse(localStorage.getItem("cartData"));
+      this.dp.push(load);
       this.$swal("Your Product Is Added To Your Cart");
+      return localStorage.setItem("cartData", JSON.stringify(this.dp));
     }
   }
 };

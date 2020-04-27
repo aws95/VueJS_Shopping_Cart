@@ -30,14 +30,14 @@
                 <td>
                   <button type="button" class="btn btn-danger" @click="dec(item)">
                     <span class="badge badge-danger">
-                      <font-awesome-icon icon="trash" />
+                      <font-awesome-icon icon="times-circle" />
                     </span>
                   </button>
                 </td>
                 <td>
                   <button type="button" class="btn btn-danger" @click="remove(item)">
                     <span class="badge badge-danger">
-                      <font-awesome-icon icon="times-circle" />
+                      <font-awesome-icon icon="trash" />
                     </span>
                   </button>
                 </td>
@@ -61,18 +61,24 @@ import _ from "lodash";
 export default {
   data() {
     return {
-      items: State.data.cart
+      items: JSON.parse(localStorage.getItem("cartData"))
     };
+  },
+  created() {
+    //localStorage.setItem('cartData',JSON.stringify(State.data.cart));
   },
   methods: {
     inc(data) {
       State.inc(data);
+      this.items = JSON.parse(localStorage.getItem("cartData"));
     },
     dec(data) {
       State.dec(data);
+      this.items = JSON.parse(localStorage.getItem("cartData"));
     },
     remove(data) {
       State.remove(data);
+      this.items = JSON.parse(localStorage.getItem("cartData"));
     }
   },
   computed: {
