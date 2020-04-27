@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #41B883;">
-      <a class="navbar-brand text-white" href="#">Test App</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -17,7 +16,7 @@
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
             <a class="navbar-brand">
-              <router-link to="/">Home</router-link>
+              <router-link to="/">Welcome</router-link>
             </a>
           </li>
           <li class="nav-item active">
@@ -40,6 +39,7 @@
     <router-view />
   </div>
 </template>
+
 
 <style>
 #app {
